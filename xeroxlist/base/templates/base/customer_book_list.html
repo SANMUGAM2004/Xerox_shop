@@ -1,0 +1,100 @@
+<!-- customer_book_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Books</title>
+    <style>
+        /* Add your styling here */
+        .confirmation-message {
+            color: green;
+            margin-bottom: 10px;
+        }
+
+        .view-cart-button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Available Books</h2>
+    <form id="user-form">
+        {% csrf_token %}
+        <label for="id_username">Your Name:</label>
+        <input type="text" id="id_username" name="username" required>
+        <button type="button" onclick="submitUserForm()">Submit</button>
+    </form>
+
+    <div id="confirmation-message"></div>
+
+    <div id="books-list" style="display:none;">
+        {% for book in books %}
+            <div class="book-square">
+                <h3>{{ book.name }}</h3>
+                <p>Price: Rs.{{ book.price }}</p>
+
+                <!-- Form for adding to cart with quantity input -->
+                <form class="add-to-cart-form" data-book-id="{{ book.id }}" method="post" action="{% url 'add_to_cart' book.id %}">
+                    {% csrf_token %}
+                    <label for="id_quantity_{{ book.id }}">Quantity:</label>
+                    <input type="number" id="id_quantity_{{ book.id }}" name="quantity" value="0" min="0" required>
+                    <input type="hidden" name="username" value="{{ request.user.username }}">
+                    <button type="submit">Add to Cart</button>
+                </form>
+                
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Display the total price -->
+    {% comment %} <p id="total-price">Total Price: Rs.0.0</p> {% endcomment %}
+
+    <a href="{% url 'customer_book_list' %}?reload=1" class="reload-link">Reload Page</a>
+
+
+    <!-- Add a button to view the cart -->
+    <a href="{% url 'view_cart' %}" class="view-cart-button">View Cart</a>
+
+    <!-- Include jQuery for simplicity (you can use vanilla JS or another library if you prefer) -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        // JavaScript to handle asynchronous form submissions
+        $(document).ready(function () {
+            $('.add-to-cart-form').submit(function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var bookId = form.data('book-id');
+                var quantity = form.find('[name="quantity"]').val();
+                var username = $('#id_username').val();
+
+                // Update the hidden input value
+                form.find('#username-input').val(username);
+
+                $.post(form.attr('action'), { quantity: quantity, csrfmiddlewaretoken: '{{ csrf_token }}' }, function (data) {
+                    // Update the total price and any other UI changes here
+                    $('#total-price').text('Total Price: Rs.' + data.total_price);
+                });
+            });
+        });
+
+        function submitUserForm() {
+            var username = $('#id_username').val();
+            
+
+            // Show a confirmation message or summary
+            $('#confirmation-message').text('Hello ' + username + '! You can now select your books.').addClass('confirmation-message');
+
+            // Show the books list
+            $('#user-form').hide();
+            $('#books-list').show();
+
+            // Show the View Cart button
+            $('.view-cart-button').show();
+            
+    
+        }
+    </script>
+</body>
+</html>

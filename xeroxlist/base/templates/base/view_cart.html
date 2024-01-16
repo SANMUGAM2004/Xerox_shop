@@ -1,0 +1,39 @@
+<!-- view_cart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Cart</title>
+    <!-- Add your styling here -->
+</head>
+<body>
+    <h2>Your Cart</h2>
+    <form method="post" action="{% url 'confirm_order' %}">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>Rs.{{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Total Amount: Rs.{{ total_amount }}</p>
+        <input type="hidden" name="username" value="{{ user.username }}">
+
+        <!-- Add a button to submit the order -->
+        <button type="submit" class="confirm-order-button">Confirm Order</button>
+    </form>
+</body>
+</html>

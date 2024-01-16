@@ -1,0 +1,105 @@
+<!-- main/templates/base/user_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        td button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .books-ordered {
+            display: none;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>User List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Total Amount</th>
+                <th>Ordered Books</th>
+                <th>Delivered</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user_order in user_orders %}
+                <tr>
+                    <td>{{ user_order.username }}</td>
+                    <td>{{ user_order.total_amount }}</td>
+                    <td>
+                        <button class="view-books-button" data-username="{{ user_order.username }}">View Books</button>
+                        <ul class="books-ordered" id="books-ordered-{{ user_order.username }}">
+                            {% for book_ordered in user_order.books_ordered %}
+                                <li>{{ book_ordered.name }} (Quantity: {{ book_ordered.quantity }})</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'mark_order_delivered' user_order.username %}">
+                            {% csrf_token %}
+                            <button class="delivered-button" type="submit">Delivered</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var viewBooksButtons = document.querySelectorAll('.view-books-button');
+
+            viewBooksButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var username = button.dataset.username;
+                    var booksOrdered = document.getElementById('books-ordered-' + username);
+
+                    // Toggle visibility of ordered books
+                    booksOrdered.style.display = (booksOrdered.style.display === 'none') ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!-- base/templates/base/order_confirmation.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+</head>
+<body>
+    <h2>Order Confirmation</h2>
+    <p>Hello, {{ user_name }}! Your order has been confirmed.</p>
+
+    <h3>Ordered Books:</h3>
+    <ul>
+        {% for book in books_ordered %}
+            <li>{{ book.name }} - Quantity: {{ book.quantity }} - Total Price: Rs.{{ book.total_price }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>Total Amount: Rs.{{ total_price }}</p>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!-- user_list_all.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Light grey background color */
+            color: #333;
+            text-align: center;
+        }
+
+        h2 {
+            color: #555; /* Dark grey header color */
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff; /* White table background color */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light grey border color */
+        }
+
+        th {
+            background-color: #3498db; /* Blue header background color */
+            color: #fff; /* White header text color */
+        }
+
+        tr:hover {
+            background-color: #f0f0f0; /* Light grey background on hover */
+        }
+    </style>
+</head>
+<body>
+    <h2>All Users</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
